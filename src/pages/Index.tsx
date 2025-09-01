@@ -108,7 +108,7 @@ const Index = () => {
                     Performance Tracking
                   </li>
                 </ul>
-                <Button className="w-full" onClick={() => navigate('/auth')}>
+                <Button className="w-full" onClick={() => navigate('/auth?role=hr')}>
                   Access HR Portal
                 </Button>
               </CardContent>
@@ -143,7 +143,7 @@ const Index = () => {
                     Notifications
                   </li>
                 </ul>
-                <Button className="w-full" variant="outline" onClick={() => navigate('/auth')}>
+                <Button className="w-full" variant="outline" onClick={() => navigate('/auth?role=employee')}>
                   Access Employee Portal
                 </Button>
               </CardContent>

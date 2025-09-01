@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,14 +12,21 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, userProfile } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const roleFromUrl = searchParams.get('role');
 
   useEffect(() => {
-    if (user) {
-      navigate('/');
+    if (user && userProfile) {
+      // Redirect based on role
+      if (userProfile.role === 'hr') {
+        navigate('/hr-portal');
+      } else {
+        navigate('/employee-portal');
+      }
     }
-  }, [user, navigate]);
+  }, [user, userProfile, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +41,7 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName, roleFromUrl || 'employee');
     setLoading(false);
   };
 
@@ -43,7 +50,9 @@ const Auth = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Z & M Consultancy</h1>
-          <p className="text-gray-600">Professional HR Management System</p>
+          <p className="text-gray-600">
+            {roleFromUrl === 'hr' ? 'HR Portal Access' : 'Employee Portal Access'}
+          </p>
         </div>
         
         <Card>

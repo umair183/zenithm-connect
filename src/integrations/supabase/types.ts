@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      attendance: {
+        Row: {
+          clock_in: string
+          clock_out: string | null
+          created_at: string
+          date: string
+          employee_id: string
+          id: string
+          total_hours: number | null
+          updated_at: string
+        }
+        Insert: {
+          clock_in?: string
+          clock_out?: string | null
+          created_at?: string
+          date?: string
+          employee_id: string
+          id?: string
+          total_hours?: number | null
+          updated_at?: string
+        }
+        Update: {
+          clock_in?: string
+          clock_out?: string | null
+          created_at?: string
+          date?: string
+          employee_id?: string
+          id?: string
+          total_hours?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leave_applications: {
         Row: {
           applied_at: string
@@ -117,7 +150,9 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
+          bio: string | null
           created_at: string
           department: string | null
           email: string
@@ -125,13 +160,16 @@ export type Database = {
           full_name: string
           hire_date: string | null
           id: string
+          job_title: string | null
           phone: string | null
           role: Database["public"]["Enums"]["user_role"]
           updated_at: string
           user_id: string
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           department?: string | null
           email: string
@@ -139,13 +177,16 @@ export type Database = {
           full_name: string
           hire_date?: string | null
           id?: string
+          job_title?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id: string
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           department?: string | null
           email?: string
@@ -153,10 +194,59 @@ export type Database = {
           full_name?: string
           hire_date?: string | null
           id?: string
+          job_title?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      task_submissions: {
+        Row: {
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
+          comment: string | null
+          created_at: string
+          employee_id: string
+          file_name: string | null
+          file_url: string | null
+          hr_feedback: string | null
+          id: string
+          submitted_at: string
+          task_id: string
+          updated_at: string
+        }
+        Insert: {
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          comment?: string | null
+          created_at?: string
+          employee_id: string
+          file_name?: string | null
+          file_url?: string | null
+          hr_feedback?: string | null
+          id?: string
+          submitted_at?: string
+          task_id: string
+          updated_at?: string
+        }
+        Update: {
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          comment?: string | null
+          created_at?: string
+          employee_id?: string
+          file_name?: string | null
+          file_url?: string | null
+          hr_feedback?: string | null
+          id?: string
+          submitted_at?: string
+          task_id?: string
+          updated_at?: string
         }
         Relationships: []
       }

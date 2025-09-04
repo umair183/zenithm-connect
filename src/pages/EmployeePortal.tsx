@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, CheckCircle, Clock, FileText, User, Bell } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, FileText, User, Bell, DollarSign } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLeaveApplications } from '@/hooks/useLeaveApplications';
 import { useTasks } from '@/hooks/useTasks';
 import { useNotifications } from '@/hooks/useNotifications';
 import { LeaveApplicationForm } from '@/components/LeaveApplicationForm';
 import { TaskUpdateForm } from '@/components/TaskUpdateForm';
+import { AttendanceTracker } from '@/components/AttendanceTracker';
+import { PayrollViewer } from '@/components/PayrollViewer';
 
 const EmployeePortal = () => {
   const { user, userProfile, signOut } = useAuth();
@@ -102,6 +104,36 @@ const EmployeePortal = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Attendance Tracker */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Attendance Tracker
+              </CardTitle>
+              <CardDescription>Clock in/out and view your attendance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AttendanceTracker />
+            </CardContent>
+          </Card>
+
+          {/* Payroll */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5" />
+                My Payroll
+              </CardTitle>
+              <CardDescription>View your salary slips</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PayrollViewer />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
           {/* Leave Applications */}
           <Card>
             <CardHeader>

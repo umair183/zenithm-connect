@@ -148,10 +148,65 @@ export type Database = {
           },
         ]
       }
+      payroll: {
+        Row: {
+          base_salary: number
+          bonuses: number
+          created_at: string
+          deductions: number
+          employee_id: string
+          generated_at: string
+          generated_by: string
+          id: string
+          late_days: number
+          month: number
+          net_pay: number
+          present_days: number
+          updated_at: string
+          working_days: number
+          year: number
+        }
+        Insert: {
+          base_salary?: number
+          bonuses?: number
+          created_at?: string
+          deductions?: number
+          employee_id: string
+          generated_at?: string
+          generated_by: string
+          id?: string
+          late_days?: number
+          month: number
+          net_pay?: number
+          present_days?: number
+          updated_at?: string
+          working_days?: number
+          year: number
+        }
+        Update: {
+          base_salary?: number
+          bonuses?: number
+          created_at?: string
+          deductions?: number
+          employee_id?: string
+          generated_at?: string
+          generated_by?: string
+          id?: string
+          late_days?: number
+          month?: number
+          net_pay?: number
+          present_days?: number
+          updated_at?: string
+          working_days?: number
+          year?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
           avatar_url: string | null
+          base_salary: number | null
           bio: string | null
           created_at: string
           department: string | null
@@ -169,6 +224,7 @@ export type Database = {
         Insert: {
           address?: string | null
           avatar_url?: string | null
+          base_salary?: number | null
           bio?: string | null
           created_at?: string
           department?: string | null
@@ -186,6 +242,7 @@ export type Database = {
         Update: {
           address?: string | null
           avatar_url?: string | null
+          base_salary?: number | null
           bio?: string | null
           created_at?: string
           department?: string | null

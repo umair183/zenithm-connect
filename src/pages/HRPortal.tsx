@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, FileText, CheckCircle, TrendingUp, Calendar, Clock } from 'lucide-react';
+import { DollarSign, Users, Calendar, Clock, FileText, CheckCircle, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfiles } from '@/hooks/useProfiles';
 import { useLeaveApplications } from '@/hooks/useLeaveApplications';
 import { useTasks } from '@/hooks/useTasks';
 import { TaskAssignmentForm } from '@/components/TaskAssignmentForm';
 import { LeaveApprovalForm } from '@/components/LeaveApprovalForm';
+import { PayrollGenerator } from '@/components/PayrollGenerator';
+import { AttendanceManagement } from '@/components/AttendanceManagement';
 
 const HRPortal = () => {
   const { user, userProfile, signOut } = useAuth();
@@ -182,8 +184,6 @@ const HRPortal = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Employee Overview */}
         <Card className="mt-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

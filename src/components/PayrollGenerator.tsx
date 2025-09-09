@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, Users, Calendar } from 'lucide-react';
-import { useGeneratePayroll, usePayroll } from '@/hooks/usePayroll';
+import { DollarSign, Users, Calendar, Trash2 } from 'lucide-react';
+import { useGeneratePayroll, usePayroll, useDeletePayroll } from '@/hooks/usePayroll';
 import { useAttendance } from '@/hooks/useAttendance';
 import { useUpdateProfile } from '@/hooks/useProfiles';
 import { format } from 'date-fns';
@@ -33,6 +33,7 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
   
   const generatePayroll = useGeneratePayroll();
   const updateProfile = useUpdateProfile();
+  const deletePayroll = useDeletePayroll();
   const { data: payrollRecords } = usePayroll();
   const { data: attendance } = useAttendance();
 
@@ -285,7 +286,7 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
               <div key={record.id} className="flex justify-between items-center p-4 border rounded-lg">
                 <div>
                   <div className="font-medium">
-                    Employee Payroll - {record.month}/{record.year}
+                    {(record as any).employee_name || 'Employee'} - {record.month}/{record.year}
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Base: ${record.base_salary} | Net: ${record.net_pay}
@@ -294,11 +295,21 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
                     Present: {record.present_days}/22 days
                   </div>
                 </div>
-                <div className="text-right">
-                  <Badge variant="secondary">Generated</Badge>
-                  <div className="text-sm font-medium mt-1">
-                    ${record.net_pay}
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <Badge variant="secondary">Generated</Badge>
+                    <div className="text-sm font-medium mt-1">
+                      ${record.net_pay}
+                    </div>
                   </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deletePayroll.mutate(record.id)}
+                    disabled={deletePayroll.isPending}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             ))}

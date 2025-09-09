@@ -116,3 +116,34 @@ export const useEmployeePayroll = (employeeId?: string) => {
     enabled: !!employeeId,
   });
 };
+
+export const useDeletePayroll = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (payrollId: string) => {
+      const { error } = await supabase
+        .from('payroll')
+        .delete()
+        .eq('id', payrollId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payroll'] });
+      queryClient.invalidateQueries({ queryKey: ['employee-payroll'] });
+      toast({
+        title: "Success",
+        description: "Payroll record deleted successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+};

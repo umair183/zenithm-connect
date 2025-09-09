@@ -101,88 +101,119 @@ const HRPortal = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Task Assignment */}
+        {/* Main Management Modules */}
+        <div className="space-y-8">
+          {/* Attendance Management Module */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5" />
-                Task Management
+                <Clock className="h-5 w-5" />
+                Attendance Management
               </CardTitle>
-              <CardDescription>Assign and manage employee tasks</CardDescription>
+              <CardDescription>Monitor and manage employee attendance in real-time</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <TaskAssignmentForm employees={employees} />
-                
-                <div className="space-y-3">
-                  <h4 className="font-medium">Recent Tasks</h4>
-                  {tasks.slice(0, 3).map((task) => (
-                    <div key={task.id} className="p-3 bg-gray-50 rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-medium">{task.title}</p>
-                          <p className="text-sm text-gray-600">
-                            Assigned to: {task.assigned_profile?.full_name}
-                          </p>
-                          {task.due_date && (
-                            <p className="text-xs text-gray-500">
-                              Due: {new Date(task.due_date).toLocaleDateString()}
-                            </p>
-                          )}
-                        </div>
-                        <Badge variant={
-                          task.status === 'completed' ? 'default' :
-                          task.status === 'in_progress' ? 'secondary' :
-                          'outline'
-                        }>
-                          {task.status.replace('_', ' ')}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <AttendanceManagement employees={employees} />
             </CardContent>
           </Card>
 
-          {/* Leave Approval */}
+          {/* Payroll Management Module */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Leave Applications
+                <DollarSign className="h-5 w-5" />
+                Payroll Management
               </CardTitle>
-              <CardDescription>Review and approve employee leave requests</CardDescription>
+              <CardDescription>Generate and manage employee payroll with attendance integration</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {pendingApplications.length > 0 ? (
-                  pendingApplications.slice(0, 4).map((application) => (
-                    <div key={application.id} className="p-3 bg-yellow-50 rounded-lg border">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <p className="font-medium">{application.profiles?.full_name}</p>
-                          <p className="text-sm text-gray-600 capitalize">
-                            {application.leave_type} Leave
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {new Date(application.start_date).toLocaleDateString()} - {' '}
-                            {new Date(application.end_date).toLocaleDateString()}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">{application.reason}</p>
-                        </div>
-                        <Badge variant="secondary">Pending</Badge>
-                      </div>
-                      <LeaveApprovalForm application={application} />
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-center py-4">No pending applications</p>
-                )}
-              </div>
+              <PayrollGenerator employees={employees} />
             </CardContent>
           </Card>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Task Assignment */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5" />
+                  Task Management
+                </CardTitle>
+                <CardDescription>Assign and manage employee tasks</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <TaskAssignmentForm employees={employees} />
+                  
+                  <div className="space-y-3">
+                    <h4 className="font-medium">Recent Tasks</h4>
+                    {tasks.slice(0, 3).map((task) => (
+                      <div key={task.id} className="p-3 bg-gray-50 rounded-lg">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium">{task.title}</p>
+                            <p className="text-sm text-gray-600">
+                              Assigned to: {task.assigned_profile?.full_name}
+                            </p>
+                            {task.due_date && (
+                              <p className="text-xs text-gray-500">
+                                Due: {new Date(task.due_date).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                          <Badge variant={
+                            task.status === 'completed' ? 'default' :
+                            task.status === 'in_progress' ? 'secondary' :
+                            'outline'
+                          }>
+                            {task.status.replace('_', ' ')}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Leave Approval */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Leave Applications
+                </CardTitle>
+                <CardDescription>Review and approve employee leave requests</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {pendingApplications.length > 0 ? (
+                    pendingApplications.slice(0, 4).map((application) => (
+                      <div key={application.id} className="p-3 bg-yellow-50 rounded-lg border">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="font-medium">{application.profiles?.full_name}</p>
+                            <p className="text-sm text-gray-600 capitalize">
+                              {application.leave_type} Leave
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {new Date(application.start_date).toLocaleDateString()} - {' '}
+                              {new Date(application.end_date).toLocaleDateString()}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">{application.reason}</p>
+                          </div>
+                          <Badge variant="secondary">Pending</Badge>
+                        </div>
+                        <LeaveApprovalForm application={application} />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-center py-4">No pending applications</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
         <Card className="mt-8">
           <CardHeader>

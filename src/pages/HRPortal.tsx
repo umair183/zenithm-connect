@@ -12,6 +12,7 @@ import { TaskAssignmentForm } from '@/components/TaskAssignmentForm';
 import { LeaveApprovalForm } from '@/components/LeaveApprovalForm';
 import { PayrollGenerator } from '@/components/PayrollGenerator';
 import { AttendanceManagement } from '@/components/AttendanceManagement';
+import EmployeeManagement from '@/components/EmployeeManagement';
 
 const HRPortal = () => {
   const { user, userProfile, signOut } = useAuth();
@@ -130,6 +131,9 @@ const HRPortal = () => {
               <PayrollGenerator employees={employees} />
             </CardContent>
           </Card>
+
+          {/* Employee Management Module */}
+          <EmployeeManagement />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Task Assignment */}

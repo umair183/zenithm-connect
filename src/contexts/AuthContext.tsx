@@ -72,6 +72,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .single();
       
       if (error) throw error;
+      
+      // Check if user is banned and sign them out
+      if (data?.status === 'banned') {
+        toast({
+          title: "Account Suspended",
+          description: "Your account has been suspended. Please contact HR for assistance.",
+          variant: "destructive",
+        });
+        await signOut();
+        return;
+      }
+      
       setUserProfile(data);
     } catch (error) {
       console.error('Error fetching user profile:', error);

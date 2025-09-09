@@ -218,6 +218,7 @@ export type Database = {
           job_title: string | null
           phone: string | null
           role: Database["public"]["Enums"]["user_role"]
+          status: string | null
           updated_at: string
           user_id: string
         }
@@ -236,6 +237,7 @@ export type Database = {
           job_title?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          status?: string | null
           updated_at?: string
           user_id: string
         }
@@ -254,6 +256,7 @@ export type Database = {
           job_title?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          status?: string | null
           updated_at?: string
           user_id?: string
         }

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { DollarSign, Users, Calendar } from 'lucide-react';
 import { useGeneratePayroll, usePayroll } from '@/hooks/usePayroll';
 import { useAttendance } from '@/hooks/useAttendance';
+import { useUpdateProfile } from '@/hooks/useProfiles';
 import { format } from 'date-fns';
 
 interface Profile {
@@ -28,12 +29,33 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [bonuses, setBonuses] = useState(0);
   const [deductions, setDeductions] = useState(0);
+  const [editedBaseSalary, setEditedBaseSalary] = useState<number | null>(null);
   
   const generatePayroll = useGeneratePayroll();
+  const updateProfile = useUpdateProfile();
   const { data: payrollRecords } = usePayroll();
   const { data: attendance } = useAttendance();
 
   const selectedEmployeeData = employees.find(e => e.user_id === selectedEmployee);
+
+  // Update edited base salary when employee changes
+  const handleEmployeeChange = (employeeId: string) => {
+    setSelectedEmployee(employeeId);
+    const employee = employees.find(e => e.user_id === employeeId);
+    setEditedBaseSalary(employee?.base_salary || 0);
+  };
+
+  const handleUpdateBaseSalary = async () => {
+    if (!selectedEmployeeData || editedBaseSalary === null) return;
+    
+    await updateProfile.mutateAsync({
+      id: selectedEmployeeData.id,
+      updates: { base_salary: editedBaseSalary }
+    });
+    
+    // Update the local employee data (this will be reflected after query refetch)
+    setEditedBaseSalary(null);
+  };
 
   const calculateAttendanceData = () => {
     if (!selectedEmployee || !attendance) return { present_days: 0, late_days: 0 };
@@ -59,7 +81,7 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
     
     const attendanceData = calculateAttendanceData();
     const workingDays = 22; // Standard working days per month
-    const baseSalary = selectedEmployeeData.base_salary || 0;
+    const baseSalary = editedBaseSalary !== null ? editedBaseSalary : (selectedEmployeeData.base_salary || 0);
     
     // Calculate deductions for absent days
     const absentDays = Math.max(0, workingDays - attendanceData.present_days);
@@ -82,12 +104,14 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
     setSelectedEmployee('');
     setBonuses(0);
     setDeductions(0);
+    setEditedBaseSalary(null);
   };
 
   const attendanceStats = calculateAttendanceData();
+  const currentBaseSalary = editedBaseSalary !== null ? editedBaseSalary : (selectedEmployeeData?.base_salary || 0);
   const netSalary = selectedEmployeeData ? 
-    (selectedEmployeeData.base_salary || 0) + bonuses - deductions - 
-    (Math.max(0, 22 - attendanceStats.present_days) * ((selectedEmployeeData.base_salary || 0) / 22)) : 0;
+    currentBaseSalary + bonuses - deductions - 
+    (Math.max(0, 22 - attendanceStats.present_days) * (currentBaseSalary / 22)) : 0;
 
   return (
     <div className="space-y-6">
@@ -104,7 +128,7 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="employee">Select Employee</Label>
-                <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>
+                <Select value={selectedEmployee} onValueChange={handleEmployeeChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Choose an employee" />
                   </SelectTrigger>
@@ -117,6 +141,30 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
                   </SelectContent>
                 </Select>
               </div>
+
+              {selectedEmployeeData && (
+                <div>
+                  <Label htmlFor="baseSalary">Base Salary ($)</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="baseSalary"
+                      type="number"
+                      value={editedBaseSalary || selectedEmployeeData.base_salary || 0}
+                      onChange={(e) => setEditedBaseSalary(Number(e.target.value))}
+                      min="0"
+                      step="0.01"
+                    />
+                    <Button
+                      onClick={handleUpdateBaseSalary}
+                      disabled={editedBaseSalary === null || editedBaseSalary === selectedEmployeeData.base_salary || updateProfile.isPending}
+                      variant="outline"
+                      size="sm"
+                    >
+                      {updateProfile.isPending ? 'Saving...' : 'Save'}
+                    </Button>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -186,7 +234,7 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span>Base Salary:</span>
-                      <span>${selectedEmployeeData.base_salary?.toFixed(2) || '0.00'}</span>
+                      <span>${currentBaseSalary.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Present Days:</span>
@@ -202,7 +250,7 @@ export const PayrollGenerator = ({ employees }: PayrollGeneratorProps) => {
                     </div>
                     <div className="flex justify-between">
                       <span>Total Deductions:</span>
-                      <span>-${(deductions + Math.max(0, 22 - attendanceStats.present_days) * ((selectedEmployeeData.base_salary || 0) / 22)).toFixed(2)}</span>
+                      <span>-${(deductions + Math.max(0, 22 - attendanceStats.present_days) * (currentBaseSalary / 22)).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between font-medium border-t pt-2">
                       <span>Net Pay:</span>

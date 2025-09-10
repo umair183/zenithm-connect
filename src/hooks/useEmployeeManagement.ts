@@ -57,8 +57,10 @@ export const useDeleteEmployee = () => {
 
   return useMutation({
     mutationFn: async (employeeId: string) => {
-      // First delete the auth user, which will cascade delete the profile
-      const { error } = await supabase.auth.admin.deleteUser(employeeId);
+      // Call edge function to delete user with service role access
+      const { error } = await supabase.functions.invoke('delete-employee', {
+        body: { employeeId }
+      });
       
       if (error) throw error;
     },
